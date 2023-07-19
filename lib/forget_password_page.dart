@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:yeni_deneme/login_page.dart';
 import 'package:yeni_deneme/services/auth_service.dart';
 
-
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
 
@@ -45,11 +44,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       try {
         await FirebaseAuth.instance.sendPasswordResetEmail(
             email: _emailTextcontroller.text.toLowerCase());
-             Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage(),),);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Mail kutunuzu kontrol edin",),),);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
       } on FirebaseAuthException catch (e) {
         print("$e");
-       
       }
     }
   }
