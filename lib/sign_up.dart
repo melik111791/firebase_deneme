@@ -12,8 +12,21 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    usernameController.dispose();
+    fullnameController.dispose();
+    super.dispose();
+  }
+
   final formKey = GlobalKey<FormState>();
-  late String email, password, fullname, username;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController fullnameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService();
   @override
@@ -57,6 +70,7 @@ class _SignUpState extends State<SignUp> {
 
                   //GİRİŞ YAPICAĞIMIZ 1. TEXTFİELD ALANININ  GÖRÜNÜMÜNÜ AYARLADIK(mail)
                   TextFormField(
+                    controller:emailController,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Bilgileri eksiksiz doldurun";
@@ -66,9 +80,8 @@ class _SignUpState extends State<SignUp> {
                         return null;
                       }
                     },
-                    onSaved: (value) {
-                      email = value!;
-                    },
+                    
+                   
                     decoration: InputDecoration(
                       hintText: 'E-mail',
                       //focus olunca rengi
@@ -90,15 +103,13 @@ class _SignUpState extends State<SignUp> {
 
                   //GİRİŞ YAPICAĞIMIZ 2. TEXTFİELD ALANININ  GÖRÜNÜMÜNÜ AYARLADIK(ad-soyad)
                   TextFormField(
+                    controller: fullnameController,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Bilgileri eksiksiz doldurun";
                       } else {
                         return null;
                       }
-                    },
-                    onSaved: (value) {
-                      fullname = value!;
                     },
                     decoration: InputDecoration(
                       hintText: 'Ad-Soyad',
@@ -121,6 +132,7 @@ class _SignUpState extends State<SignUp> {
 
                   //GİRİŞ YAPICAĞIMIZ 3. TEXTFİELD ALANININ  GÖRÜNÜMÜNÜ AYARLADIK(kullanıcı adı)
                   TextFormField(
+                    controller: usernameController,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Bilgileri eksiksiz doldurun";
@@ -128,9 +140,7 @@ class _SignUpState extends State<SignUp> {
                         return null;
                       }
                     },
-                    onSaved: (value) {
-                      username = value!;
-                    },
+                    
                     decoration: InputDecoration(
                       hintText: 'Kullanıcı Adı',
                       //focus olunca rengi
@@ -152,6 +162,7 @@ class _SignUpState extends State<SignUp> {
 
                   //GİRİŞ YAPICAĞIMIZ 4. TEXTFİELD ALANININ  GÖRÜNÜMÜNÜ AYARLADIK(şifre)
                   TextFormField(
+                    controller: passwordController,
                     //Boş olup olmadığını kontrol ediyoruz
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -163,9 +174,7 @@ class _SignUpState extends State<SignUp> {
                         return null;
                       }
                     },
-                    onSaved: (value) {
-                      password = value!;
-                    },
+
                     obscureText:
                         true, //Şifre yazılırken gözükmemesini sağlamak için
 
@@ -193,13 +202,13 @@ class _SignUpState extends State<SignUp> {
                     child: TextButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          formKey.currentState!.save();
                           final result = await authService.SignUp(
-                              email: email,
-                              password: password,
-                              username: username,
-                              fullname: fullname,
-                              context: context);
+                            email: emailController.text,
+                            password: passwordController.text,
+                            username: usernameController.text,
+                            fullname: fullnameController.text,
+                            context: context,
+                          );
                           try {
                             if (result != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
