@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:yeni_deneme/forget_password_page.dart';
 import 'package:yeni_deneme/home_page.dart';
 import 'package:yeni_deneme/services/auth_service.dart';
-import 'package:yeni_deneme/widgets/customtxt_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -63,25 +63,25 @@ class _LoginPageState extends State<LoginPage> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Bilgileri eksiksiz doldurun";
-                      } else if (
-                        !value.contains("@gmail.com") ) {
-                          showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('HATA'),
-            content: Text("Lütfen Geçerli bir mail adresi yazınız"),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Geri Dön'),
-              ),
-            ],
-          );
-        },
-      );
-    }else {}
-                    },                    
+                      } else if (!value.contains("@gmail.com")) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('HATA'),
+                              content: Text(
+                                  "Lütfen Geçerli bir mail adresi yazınız"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('Geri Dön'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {}
+                    },
                     onSaved: (value) {
                       email = value!;
                     },
@@ -103,8 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 20,
                   ),
-
-
 
                   //GİRİŞ YAPICAĞIMIZ 2. TEXTFİELD ALANININ  GÖRÜNÜMÜNÜ AYARLADIK(şifre)
                   TextFormField(
@@ -146,7 +144,12 @@ class _LoginPageState extends State<LoginPage> {
                   Center(
                     child: TextButton(
                       onPressed: () async {
-                        Navigator.push(context, MaterialPageRoute(builder: ((context) => ForgetPassword()),),);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: ((context) => ForgetPassword()),
+                          ),
+                        );
                       },
                       child: const Text(
                         'Şifremi Unuttum',
@@ -239,17 +242,44 @@ class _LoginPageState extends State<LoginPage> {
 
                   //Misafir girişi butonu yaptık
                   Center(
-                    child: CustomTextButton(
-                        onPressed: () async {
-                          final result = await authService.signInAnonymus();
-                          if (result != null) {
-                            Navigator.pushNamed(context, "/homePage");
-                          } else {
-                            print("Hata ile karşılaşıldı");
-                          }
-                        },
-                        buttonText: 'Misafir Girişi'),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 101, 43, 62)),
+                      onPressed: () async {
+                        final result = await authService.signInAnonymus();
+                        if (result != null) {
+                          Navigator.pushNamed(context, "/homePage");
+                        } else {
+                          print("Hata ile karşılaşıldı");
+                        }
+                      },
+                      label: Text(
+                        'Misafir girişi',
+                      ),
+                      icon: Icon(
+                        Icons.person,
+                      ),
+                    ),
                   ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  //Google ile giriş kısmını yaptık
+                  Center(
+                      child: IconButton(
+                    icon: Image.network(
+                        'https://img.freepik.com/free-icon/google_318-278809.jpg'),
+                    iconSize: 40,
+                    onPressed: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.googleLogin().then((value) => Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage())));
+                    },
+                  ))
                 ],
               ),
             ),

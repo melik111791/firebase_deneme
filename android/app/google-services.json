@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "585678689885-b1feuttqn41rjtmf6skoj879tq6famtc.apps.googleusercontent.com",
+          "client_id": "585678689885-0f3h9lqsss2pqbv9edpi5fa1io2lsc0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yeni_deneme",
+            "certificate_hash": "2b73e4e20d69425aac479a4f686c1e41852a944a"
+          }
+        },
+        {
+          "client_id": "585678689885-79rskj4ojvnimi1s0e01nce14pg6aej1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "585678689885-b1feuttqn41rjtmf6skoj879tq6famtc.apps.googleusercontent.com",
+              "client_id": "585678689885-79rskj4ojvnimi1s0e01nce14pg6aej1.apps.googleusercontent.com",
               "client_type": 3
             },
             {
